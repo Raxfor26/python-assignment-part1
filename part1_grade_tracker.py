@@ -1,5 +1,4 @@
-#Task 1
-
+# Task 1
 
 raw_students = [
     {"name": "  ayesha SHARMA  ", "roll": "101", "marks_str": "88, 72, 95, 60, 78"},
@@ -9,65 +8,70 @@ raw_students = [
     {"name": " Sneha pillai ",    "roll": "105", "marks_str": "75, 80, 70, 68, 85"},
 ]
 
-
 cleaned_students = []
 
-for students in raw_students:
+for student in raw_students:
 
-    cleaned_name = students["name"].strip().title()
+    # remove extra spaces and fix capitalization
+    name = student["name"].strip()
+    name = name.title()
 
-    cleaned_roll = int(students["roll"])
+    # convert roll number from string to int
+    roll = int(student["roll"])
 
-    cleaned_marks = [int(mark) for mark in students["marks_str"].split(", ")]
-    
+    # split the marks string by ", " to get a list of strings, then convert each to int
+    marks_list = student["marks_str"].split(", ")
+    marks = []
+    for m in marks_list:
+        marks.append(int(m))
 
-    is_valid_name = cleaned_name.replace(" ", "").isalpha()
-    
-    if is_valid_name:
-        print('Valid name')
+    # check if the name has only letters (ignore spaces)
+    name_no_spaces = name.replace(" ", "")
+    if name_no_spaces.isalpha():
+        print("Valid name")
     else:
-        print('Invalid name')      
-        
-  
+        print("Invalid name")
+
+    # save the cleaned student data
     cleaned_students.append({
-        "name": cleaned_name,
-        "roll": cleaned_roll,
-        "marks_str": cleaned_marks
-    })       
+        "name": name,
+        "roll": roll,
+        "marks_str": marks
+    })
 
-    print('====================')
-    print(f"Student: {cleaned_name}")
-    print(f"Roll No: {cleaned_roll}")
-    print(f"Marks: {cleaned_marks}")
-    print('====================\n')
+    print("====================")
+    print("Student: " + name)
+    print("Roll No: " + str(roll))
+    print("Marks: " + str(marks))
+    print("====================")
+    print("")
 
-print('Requirement for Roll No 103')
-for students in cleaned_students:
-    if students['roll'] == 103:
-        print(f"ALL CAPS: {students['name'].upper()}")
-        print(f"lowercase: {students['name'].lower()}\n")
+# find roll 103 and print their name in caps and lowercase
+print("Requirement for Roll No 103")
+for student in cleaned_students:
+    if student["roll"] == 103:
+        print("ALL CAPS: " + student["name"].upper())
+        print("lowercase: " + student["name"].lower())
+        print("")
         break
 
 
 
 
+# Task 2
 
-#Task 2
-
-
-# --- Initial Data ---
 student_name = "Ayesha Sharma"
 subjects = ["Math", "Physics", "CS", "English", "Chemistry"]
 marks = [88, 72, 95, 60, 78]
 
-# --- Part 1: For Loop & Grade Assignment ---
-print(f"--- Grade Report for {student_name} ---")
+print("--- Grade Report for " + student_name + " ---")
 
+# go through each subject one by one using the index
 for i in range(len(subjects)):
     sub = subjects[i]
     score = marks[i]
-    
-    # Determine the grade based on the score
+
+    # assign grade based on score
     if score >= 90:
         grade = "A+"
     elif score >= 80:
@@ -78,179 +82,196 @@ for i in range(len(subjects)):
         grade = "C"
     else:
         grade = "F"
-        
-    print(f"{sub}: {score} - Grade: {grade}")
 
-# --- Part 2: Calculate Statistics ---
-total_marks = sum(marks)
-average_marks = total_marks / len(marks)
+    print(sub + ": " + str(score) + " - Grade: " + grade)
 
-# Find the highest and lowest scores
-max_mark = max(marks)
-max_index = marks.index(max_mark)
-highest_sub = subjects[max_index]
+# calculate total and average
+total = 0
+for m in marks:
+    total = total + m
 
-min_mark = min(marks)
-min_index = marks.index(min_mark)
-lowest_sub = subjects[min_index]
+average = total / len(marks)
 
-print("\n--- Current Statistics ---")
-print(f"Total Marks: {total_marks}")
-print(f"Average Marks: {average_marks:.2f}")
-print(f"Highest Scoring Subject: {highest_sub} ({max_mark})")
-print(f"Lowest Scoring Subject: {lowest_sub} ({min_mark})")
+# find highest mark and which subject it belongs to
+highest = marks[0]
+for m in marks:
+    if m > highest:
+        highest = m
 
-# --- Part 3: While Loop (Interactive Entry) ---
-print("\n--- Add New Subjects ---")
+highest_index = marks.index(highest)
+best_subject = subjects[highest_index]
+
+# find lowest mark and which subject it belongs to
+lowest = marks[0]
+for m in marks:
+    if m < lowest:
+        lowest = m
+
+lowest_index = marks.index(lowest)
+worst_subject = subjects[lowest_index]
+
+print("")
+print("--- Current Statistics ---")
+print("Total Marks: " + str(total))
+print("Average Marks: " + str(round(average, 2)))
+print("Highest Scoring Subject: " + best_subject + " (" + str(highest) + ")")
+print("Lowest Scoring Subject: " + worst_subject + " (" + str(lowest) + ")")
+
+# keep asking the user to add new subjects until they type done
+print("")
+print("--- Add New Subjects ---")
 print("(Type 'done' as the subject name to stop)")
 
-new_subjects_count = 0
+count_added = 0
 
 while True:
-    new_sub = input("Enter subject name: ").strip()
-    
-    # Check for the exit condition
-    if new_sub.lower() == 'done':
+    new_subject = input("Enter subject name: ")
+    new_subject = new_subject.strip()
+
+    if new_subject.lower() == "done":
         break
-        
-    mark_input = input(f"Enter marks for {new_sub} (0-100): ").strip()
-    
-    # Validate the input using a try-except block
+
+    new_mark_input = input("Enter marks for " + new_subject + " (0-100): ")
+    new_mark_input = new_mark_input.strip()
+
+    # make sure the mark is actually a number
     try:
-        new_mark = float(mark_input) # Using float handles both decimals and integers
-        
-        # Check if the number is within the valid range
-        if new_mark < 0 or new_mark > 100:
-            print("⚠️ Warning: Marks must be between 0 and 100. Entry skipped.\n")
-            continue
-            
+        new_mark = float(new_mark_input)
     except ValueError:
-        # If float() fails, it wasn't a number
-        print("⚠️ Warning: Invalid input. Marks must be a number. Entry skipped.\n")
+        print("Warning: Invalid input. Marks must be a number. Entry skipped.")
+        print("")
         continue
-        
-    # If we reach here, the input is valid!
-    subjects.append(new_sub)
+
+    # make sure the number is between 0 and 100
+    if new_mark < 0 or new_mark > 100:
+        print("Warning: Marks must be between 0 and 100. Entry skipped.")
+        print("")
+        continue
+
+    # if we get here the input was fine so we add it
+    subjects.append(new_subject)
     marks.append(new_mark)
-    new_subjects_count += 1
-    print(f"✓ Successfully added {new_sub} with {new_mark} marks.\n")
+    count_added = count_added + 1
+    print("Successfully added " + new_subject + " with " + str(new_mark) + " marks.")
+    print("")
 
-# --- Part 4: Final Summary ---
-print("\n--- Final Update ---")
-print(f"New subjects added: {new_subjects_count}")
+print("")
+print("--- Final Update ---")
+print("New subjects added: " + str(count_added))
 
-# Recalculate average with the updated lists
-updated_average = sum(marks) / len(marks)
-print(f"Updated Average Marks: {updated_average:.2f}\n")
+# recalculate average with any new subjects added
+new_total = 0
+for m in marks:
+    new_total = new_total + m
+new_average = new_total / len(marks)
+
+print("Updated Average Marks: " + str(round(new_average, 2)))
+print("")
 
 
 
 
-
-#Task 3
-
+# Task 3
 
 class_data = [
-    ("Ayesha Sharma",  [88, 72, 95, 60, 78]),
-    ("Rohit Verma",    [55, 68, 49, 72, 61]),
-    ("Priya Nair",     [91, 85, 88, 94, 79]),
-    ("Karan Mehta",    [40, 55, 38, 62, 50]),
-    ("Sneha Pillai",   [75, 80, 70, 68, 85]),
+    ("Ayesha Sharma", [88, 72, 95, 60, 78]),
+    ("Rohit Verma",   [55, 68, 49, 72, 61]),
+    ("Priya Nair",    [91, 85, 88, 94, 79]),
+    ("Karan Mehta",   [40, 55, 38, 62, 50]),
+    ("Sneha Pillai",  [75, 80, 70, 68, 85]),
 ]
 
-# 1. Variables to track our summary statistics
 passed_count = 0
 failed_count = 0
-highest_avg = 0
 topper_name = ""
-sum_of_averages = 0
+highest_avg = 0
+total_of_all_averages = 0
 
-# 2. Print the table header
+# print the header row for the table
 print(f"{'Name':<17} | {'Average':<7} | Status")
 print("-" * 40)
 
-# 3. Loop through the data to process each student
 for name, marks in class_data:
-    # Calculate average
-    student_avg = sum(marks) / len(marks)
-    sum_of_averages += student_avg
-    
-    # Determine status and update counts
-    if student_avg >= 60:
+
+    # calculate average for this student
+    total = 0
+    for m in marks:
+        total = total + m
+    avg = total / len(marks)
+
+    total_of_all_averages = total_of_all_averages + avg
+
+    # pass if average is 60 or above
+    if avg >= 60:
         status = "Pass"
-        passed_count += 1
+        passed_count = passed_count + 1
     else:
         status = "Fail"
-        failed_count += 1
-        
-    # Check if this student is the new topper
-    if student_avg > highest_avg:
-        highest_avg = student_avg
+        failed_count = failed_count + 1
+
+    # check if this student has the highest average so far
+    if avg > highest_avg:
+        highest_avg = avg
         topper_name = name
-        
-    # Print the formatted row
-    # <17 means left-align with 17 spaces, >7.2f means right-align with 7 spaces & 2 decimal points
-    print(f"{name:<17} | {student_avg:>7.2f}  | {status}")
 
-# 4. Calculate final class average
-class_average = sum_of_averages / len(class_data)
+    print(f"{name:<17} | {avg:>7.2f}  | {status}")
 
-# 5. Print the summary
-print("\n--- Summary ---")
-print(f"Passed: {passed_count}")
-print(f"Failed: {failed_count}")
-print(f"Class Topper: {topper_name} ({highest_avg:.2f})")
-print(f"Class Average: {class_average:.2f}\n")
+class_average = total_of_all_averages / len(class_data)
+
+print("")
+print("--- Summary ---")
+print("Passed: " + str(passed_count))
+print("Failed: " + str(failed_count))
+print("Class Topper: " + topper_name + " (" + str(round(highest_avg, 2)) + ")")
+print("Class Average: " + str(round(class_average, 2)))
+print("")
 
 
 
 
-#Task 4
+# Task 4
 
 essay = "  python is a versatile language. it supports object oriented, functional, and procedural programming. python is widely used in data science and machine learning.  "
 
-# --- Step 1: Strip Whitespace ---
+# step 1 - remove the extra spaces at the start and end
 clean_essay = essay.strip()
 
-# --- Step 2: Convert to Title Case ---
+# step 2 - print in title case
 print("--- Step 2: Title Case ---")
 print(clean_essay.title())
-print() # Adding empty prints just to make the terminal output easier to read
+print("")
 
-# --- Step 3: Count 'python' ---
-# The hint correctly notes that clean_essay is completely lowercase already
-count_python = clean_essay.count("python")
+# step 3 - count how many times python appears
+count = clean_essay.count("python")
 print("--- Step 3: Word Count ---")
-print(f"'python' appears: {count_python} times")
-print()
+print("'python' appears: " + str(count) + " times")
+print("")
 
-# --- Step 4: Replace 'python' with 'Python 🐍' ---
-replaced_essay = clean_essay.replace("python", "Python 🐍")
+# step 4 - replace python with Python and the snake emoji
+new_essay = clean_essay.replace("python", "Python 🐍")
 print("--- Step 4: Replaced Text ---")
-print(replaced_essay)
-print()
+print(new_essay)
+print("")
 
-# --- Step 5: Split into sentences ---
+# step 5 - split into a list of sentences
 sentences = clean_essay.split(". ")
 print("--- Step 5: List of Sentences ---")
 print(sentences)
-print()
+print("")
 
-# --- Step 6: Numbered & Formatted Sentences ---
+# step 6 - print each sentence with a number in front
 print("--- Step 6: Numbered Sentences ---")
-# Using enumerate() allows us to easily get both the index (starting at 1) and the sentence
-for index, sentence in enumerate(sentences, start=1):
-    # Ensure every sentence ends with a period
-    if not sentence.endswith("."):
-        sentence += "."
-        
-    print(f"{index}. {sentence}")
+number = 1
+for sentence in sentences:
+    # add a period at the end if it doesnt already have one
+    if sentence.endswith(".") == False:
+        sentence = sentence + "."
+    print(str(number) + ". " + sentence)
+    number = number + 1
+
 
 
 #Output
-
-
-
 
 """
 Valid name
@@ -301,17 +322,21 @@ Chemistry: 78 - Grade: B
 
 --- Current Statistics ---
 Total Marks: 393
-Average Marks: 78.60
+Average Marks: 78.6
 Highest Scoring Subject: CS (95)
 Lowest Scoring Subject: English (60)
 
 --- Add New Subjects ---
 (Type 'done' as the subject name to stop)
+Enter subject name: math
+Enter marks for math (0-100): 77
+Successfully added math with 77.0 marks.
+
 Enter subject name: done
 
 --- Final Update ---
-New subjects added: 0
-Updated Average Marks: 78.60
+New subjects added: 1
+Updated Average Marks: 78.33
 
 Name              | Average | Status
 ----------------------------------------
@@ -324,7 +349,7 @@ Sneha Pillai      |   75.60  | Pass
 --- Summary ---
 Passed: 4
 Failed: 1
-Class Topper: Priya Nair (87.40)
+Class Topper: Priya Nair (87.4)
 Class Average: 70.32
 
 --- Step 2: Title Case ---
